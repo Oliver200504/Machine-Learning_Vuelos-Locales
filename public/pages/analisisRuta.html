@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>
+
+        Dashboard - Análisis de Rutas
+
+    </title>
+
+    <!-- Bootstrap -->
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+        rel="stylesheet">
+
+    <!-- FontAwesome -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- ChartJS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- noUiSlider -->
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css">
+
+    <!-- CSS -->
+
+    <link
+        rel="stylesheet"
+        href="../css/style.css">
+
+    <link
+        rel="stylesheet"
+        href="../css/sidebar.css">
+
+    <link
+        rel="stylesheet"
+        href="../css/analisisRuta.css">
+
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <div id="sidebar-container"></div>
+
+    <!-- Overlay -->
+
+    <div
+        id="overlay"
+        class="overlay">
+
+    </div>
+
+    <!-- Contenido -->
+
+    <div
+        id="mainContent"
+        class="container-fluid py-4">
+
+        <!-- Encabezado -->
+
+        <div class="row mb-4">
+
+            <div class="col-12">
+
+                <div class="header">
+
+                    <div class="header-top">
+
+                        <button
+                            id="btnMenu"
+                            class="btn-menu">
+
+                            <i class="fa-solid fa-bars"></i>
+
+                        </button>
+
+                        <h2>
+
+                            <i class="fa-solid fa-route"></i>
+
+                            Dashboard de Análisis de Rutas
+
+                        </h2>
+
+                    </div>
+
+                    <p>
+
+                        Sistema de análisis de rutas de vuelos en Estados Unidos
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- ============================= -->
+        <!-- FILTROS -->
+        <!-- ============================= -->
+
+        <div class="row mb-4">
+
+            <div class="col-12">
+
+                <div class="filter-card">
+
+                    <div class="row">
+
+                        <!-- AÑOS -->
+
+                        <div class="col-md-6">
+
+                            <label class="filter-title">
+
+                                Rango de años
+
+                            </label>
+
+                            <div id="sliderAnios"></div>
+
+                            <div class="slider-info">
+
+                                <span id="lblAnioInicio">
+
+                                    2019
+
+                                </span>
+
+                                <span id="lblAnioFin">
+
+                                    2023
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- MESES -->
+
+                        <div class="col-md-6">
+
+                            <label class="filter-title">
+
+                                Rango de meses
+
+                            </label>
+
+                            <div id="sliderMeses"></div>
+
+                            <div class="slider-info">
+
+                                <span id="lblMesInicio">
+
+                                    Enero
+
+                                </span>
+
+                                <span id="lblMesFin">
+
+                                    Diciembre
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row mt-4">
+
+                        <!-- Aerolínea -->
+
+                        <div class="col-md-5">
+
+                            <label>
+
+                                Aerolínea
+
+                            </label>
+
+                            <select
+                                id="cmbAerolinea"
+                                class="form-select">
+
+                            </select>
+
+                        </div>
+
+                        <!-- Franja -->
+
+                        <div class="col-md-5">
+
+                            <label>
+
+                                Franja Horaria
+
+                            </label>
+
+                            <select
+                                id="cmbFranja"
+                                class="form-select">
+
+                            </select>
+
+                        </div>
+
+                        <!-- Botón -->
+
+                        <div class="col-md-2 d-flex align-items-end">
+
+                            <button
+                                id="btnLimpiar"
+                                class="btn btn-primary w-100">
+
+                                Limpiar
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- KPIs -->
+
+        <!-- ============================= -->
+<!-- KPIs -->
+<!-- ============================= -->
+
+<div class="row g-3 mb-4">
+
+    <!-- Total de rutas -->
+
+    <div class="col-lg">
+
+        <div class="card kpi-card">
+
+            <div class="card-body">
+
+                <i class="fa-solid fa-route fa-lg mb-2"></i>
+
+                <h6>
+
+                    Total de Rutas
+
+                </h6>
+
+                <h3 id="kpiRutas">
+
+                    -
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Millas recorridas -->
+
+    <div class="col-lg">
+
+        <div class="card kpi-card">
+
+            <div class="card-body">
+
+                <i class="fa-solid fa-road fa-lg mb-2"></i>
+
+                <h6>
+
+                    Millas Recorridas
+
+                </h6>
+
+                <h3 id="kpiMillas">
+
+                    -
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Tiempo promedio -->
+
+    <div class="col-lg">
+
+        <div class="card kpi-card">
+
+            <div class="card-body">
+
+                <i class="fa-solid fa-clock fa-lg mb-2"></i>
+
+                <h6>
+
+                    Tiempo Promedio
+
+                </h6>
+
+                <h3 id="kpiTiempo">
+
+                    -
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Ruta más utilizada -->
+
+    <div class="col-lg">
+
+        <div class="card kpi-card">
+
+            <div class="card-body">
+
+                <i class="fa-solid fa-plane-departure fa-lg mb-2"></i>
+
+                <h6>
+
+                    Ruta Más Utilizada
+
+                </h6>
+
+                <h3 id="kpiRuta">
+
+                    -
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Promedio -->
+
+    <div class="col-lg">
+
+        <div class="card kpi-card">
+
+            <div class="card-body">
+
+                <i class="fa-solid fa-building fa-lg mb-2"></i>
+
+                <h6>
+
+                    Promedio de Vuelos por Aeropuerto
+
+                </h6>
+
+                <h3 id="kpiPromedio">
+
+                    -
+
+                </h3>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- TOP 10 RUTAS -->
+<!-- ============================= -->
+
+<div class="row mb-4">
+
+    <div class="col-12">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Top 10 Rutas Más Utilizadas
+
+            </h5>
+
+            <div class="chart-container">
+
+                <canvas id="graficaTopRutas"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ============================= -->
+<!-- MAPA Y LÍNEA -->
+<!-- ============================= -->
+
+<div class="row mb-4">
+
+    <!-- MAPA -->
+
+    <div class="col-lg-5">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Vuelos por Estado
+
+            </h5>
+
+            <div
+                id="mapaEstados"
+                style="height:420px;">
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LÍNEA -->
+
+    <div class="col-lg-7">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Distancia, Puntualidad y Vuelos Desviados por Mes
+
+            </h5>
+
+            <div class="chart-container">
+
+                <canvas id="graficaLinea"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
+<!-- ============================= -->
+<!-- JAVASCRIPT -->
+<!-- ============================= -->
+
+<!-- noUiSlider -->
+
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
+
+<!-- ChartJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Leaflet -->
+
+<link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<!-- Estados USA -->
+
+<script src="https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json"></script>
+
+<!-- Sidebar -->
+
+<script src="../js/sidebarLoader.js"></script>
+
+<script src="../js/sidebar.js"></script>
+
+<!-- Charts -->
+
+<script src="../js/analisisRutaCharts.js"></script>
+
+<!-- Dashboard -->
+
+<script src="../js/analisisRuta.js"></script>
+
+</body>
+
+</html>

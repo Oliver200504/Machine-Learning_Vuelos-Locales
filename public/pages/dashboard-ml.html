@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Machine Learning</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<link rel="stylesheet" href="../css/style.css">
+<link rel="stylesheet" href="../css/sidebar.css">
+
+</head>
+
+<body>
+
+<div id="sidebar-container"></div>
+
+<div id="overlay" class="overlay"></div>
+
+<div id="mainContent" class="container-fluid py-4">
+
+<div class="row mb-4">
+
+<div class="col-12">
+
+<div class="header">
+
+<div class="header-top">
+
+<button id="btnMenu" class="btn-menu">
+<i class="fa-solid fa-bars"></i>
+</button>
+
+<h2>
+
+<i class="fa-solid fa-brain"></i>
+
+Machine Learning
+
+</h2>
+
+</div>
+
+<p>
+
+Predicción Inteligente de Retrasos de Vuelos mediante Redes Neuronales
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="filter-card">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<label>Fecha</label>
+
+<input
+type="date"
+id="txtFecha"
+class="form-control">
+
+</div>
+
+<div class="col-md-4">
+
+<label>Aerolínea</label>
+
+<select
+id="cmbAerolinea"
+class="form-select">
+
+<option value="">Seleccione...</option>
+
+</select>
+
+</div>
+
+<div class="col-md-4">
+
+<label>Franja Horaria</label>
+
+<select
+id="cmbHorario"
+class="form-select">
+
+<option value="">Seleccione...</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="row mt-3">
+
+<div class="col-md-6">
+
+<label>Aeropuerto Origen</label>
+
+<select
+id="cmbOrigen"
+class="form-select">
+
+<option value="">Seleccione...</option>
+
+</select>
+
+</div>
+
+<div class="col-md-6">
+
+<label>Aeropuerto Destino</label>
+
+<select
+id="cmbDestino"
+class="form-select">
+
+<option value="">Seleccione...</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-md-12">
+
+<button
+id="btnPredecir"
+class="btn btn-primary w-100">
+
+<i class="fa-solid fa-brain"></i>
+
+Realizar Predicción
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-lg">
+
+<div class="card kpi-card">
+
+<div class="card-body text-center">
+
+<i class="fa-solid fa-clock fa-2x mb-3"></i>
+
+<h6>Minutos Estimados</h6>
+
+<h3 id="kpiMinutos">-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg">
+
+<div class="card kpi-card">
+
+<div class="card-body text-center">
+
+<i class="fa-solid fa-percent fa-2x mb-3"></i>
+
+<h6>Probabilidad Retraso</h6>
+
+<h3 id="kpiRetraso">-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg">
+
+<div class="card kpi-card">
+
+<div class="card-body text-center">
+
+<i class="fa-solid fa-ban fa-2x mb-3"></i>
+
+<h6>Probabilidad Cancelación</h6>
+
+<h3 id="kpiCancelacion">-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg">
+
+<div class="card kpi-card">
+
+<div class="card-body text-center">
+
+<i class="fa-solid fa-triangle-exclamation fa-2x mb-3"></i>
+
+<h6>Nivel Riesgo</h6>
+
+<h3 id="kpiRiesgo">-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-lg">
+
+<div class="card kpi-card">
+
+<div class="card-body text-center">
+
+<i class="fa-solid fa-circle-info fa-2x mb-3"></i>
+
+<h6>Motivo Probable</h6>
+
+<h3 id="kpiMotivo">-</h3>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row mt-4">
+
+<div class="col-12">
+
+<div class="chart-card">
+
+<h5 class="mb-3">
+
+Resultado de la Predicción
+
+</h5>
+
+<div style="height:420px;">
+
+<canvas id="graficaPrediccion"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="../js/sidebarLoader.js"></script>
+<script src="../js/sidebar.js"></script>
+
+<script>
+
+    let grafica=null;
+
+//=====================================
+// CARGAR FILTROS
+//=====================================
+
+async function cargarFiltros(){
+
+    try{
+
+        const respuesta=await fetch("/api/ml/filtros");
+
+        const datos=await respuesta.json();
+
+        llenarCombo(
+            "cmbAerolinea",
+            datos.aerolineas,
+            "sk_aerolinea",
+            "nombre_aerolinea"
+        );
+
+        llenarCombo(
+    "cmbOrigen",
+    datos.ciudades,
+    "sk_aeropuerto",
+    "ciudad"
+);
+
+llenarCombo(
+    "cmbDestino",
+    datos.ciudades,
+    "sk_aeropuerto",
+    "ciudad"
+);
+
+        llenarCombo(
+            "cmbHorario",
+            datos.horarios,
+            "sk_horario",
+            "franja_horaria"
+        );
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No fue posible cargar los filtros.");
+
+    }
+
+}
+
+//=====================================
+// LLENAR COMBOS
+//=====================================
+
+function llenarCombo(id,datos,value,texto){
+
+    const combo=document.getElementById(id);
+
+    let html='<option value="">Seleccione...</option>';
+
+    datos.forEach(x=>{
+
+        html+=`
+            <option value="${x[value]}">
+                ${x[texto]}
+            </option>
+        `;
+
+    });
+
+    combo.innerHTML=html;
+
+}
+
+//=====================================
+// ESPERAR MODELO
+//=====================================
+
+async function esperarModelo(){
+
+    while(true){
+
+        const respuesta=await fetch("/api/ml/estado");
+
+        const estado=await respuesta.json();
+
+        if(estado.entrenado){
+
+            break;
+
+        }
+
+        await new Promise(resolve=>setTimeout(resolve,1000));
+
+    }
+
+}
+
+//=====================================
+// EVENTOS
+//=====================================
+
+document.addEventListener("DOMContentLoaded",async()=>{
+
+    await esperarModelo();
+
+    await cargarFiltros();
+
+    document
+        .getElementById("btnPredecir")
+        .addEventListener(
+            "click",
+            predecir
+        );
+
+});
+
+//=====================================
+// PREDICCIÓN
+//=====================================
+
+async function predecir(){
+
+    try{
+
+        const fecha=document.getElementById("txtFecha").value;
+
+        if(!fecha){
+
+            alert("Seleccione una fecha.");
+
+            return;
+
+        }
+
+        const partes=fecha.split("-");
+
+        const datos={
+
+            anio:Number(partes[0]),
+
+            mes:Number(partes[1]),
+
+            dia:Number(partes[2]),
+
+            aerolinea:Number(document.getElementById("cmbAerolinea").value),
+
+            origen:Number(document.getElementById("cmbOrigen").value),
+
+            destino:Number(document.getElementById("cmbDestino").value),
+
+            horario:Number(document.getElementById("cmbHorario").value)
+
+        };
+
+        const respuesta=await fetch("/api/ml/predecir",{
+
+            method:"POST",
+
+            headers:{
+                "Content-Type":"application/json"
+            },
+
+            body:JSON.stringify(datos)
+
+        });
+
+        const resultado=await respuesta.json();
+
+        mostrarKPIs(resultado);
+
+        crearGrafica(resultado);
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No fue posible realizar la predicción.");
+
+    }
+
+}
+
+//=====================================
+// KPIs
+//=====================================
+
+function mostrarKPIs(resultado){
+
+    document.getElementById("kpiMinutos").innerHTML=
+        resultado.minutos+" min";
+
+    document.getElementById("kpiRetraso").innerHTML=
+        resultado.probabilidadRetraso+" %";
+
+    document.getElementById("kpiCancelacion").innerHTML=
+        resultado.probabilidadCancelacion+" %";
+
+    document.getElementById("kpiRiesgo").innerHTML=
+        resultado.riesgo;
+
+    document.getElementById("kpiMotivo").innerHTML=
+        resultado.motivo;
+
+}
+
+//=====================================
+// GRÁFICA
+//=====================================
+
+function crearGrafica(resultado){
+
+    const ctx=document
+        .getElementById("graficaPrediccion")
+        .getContext("2d");
+
+    if(grafica){
+
+        grafica.destroy();
+
+    }
+
+    grafica=new Chart(ctx,{
+
+        type:"bar",
+
+        data:{
+
+            labels:[
+
+                "Minutos",
+                "Prob. Retraso",
+                "Prob. Cancelación"
+
+            ],
+
+            datasets:[{
+
+                label:"Predicción",
+
+                data:[
+
+                    resultado.minutos,
+                    resultado.probabilidadRetraso,
+                    resultado.probabilidadCancelacion
+
+                ],
+
+                backgroundColor:[
+
+                    "#1976D2",
+                    "#FB8C00",
+                    "#E53935"
+
+                ],
+
+                borderRadius:8
+
+            }]
+
+        },
+
+        options:{
+
+            responsive:true,
+
+            maintainAspectRatio:false,
+
+            plugins:{
+
+                legend:{
+
+                    display:false
+
+                }
+
+            },
+
+            scales:{
+
+                y:{
+
+                    beginAtZero:true
+
+                }
+
+            }
+
+        }
+
+    });
+
+}
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+
+<html lang="es">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>
+
+    Dashboard - Cancelaciones por Aeropuerto
+
+</title>
+
+<!-- Bootstrap -->
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<!-- FontAwesome -->
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- ChartJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- noUiSlider -->
+
+<link rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.css">
+
+<!-- CSS -->
+
+<link rel="stylesheet"
+      href="../css/style.css">
+
+<link rel="stylesheet"
+      href="../css/sidebar.css">
+
+</head>
+
+<body>
+
+<!-- Sidebar -->
+
+<div id="sidebar-container"></div>
+
+<!-- Overlay -->
+
+<div id="overlay"
+     class="overlay"></div>
+
+<!-- Contenido -->
+
+<div id="mainContent"
+     class="container-fluid py-4">
+
+<!-- ===================================== -->
+<!-- ENCABEZADO -->
+<!-- ===================================== -->
+
+<div class="row mb-4">
+
+    <div class="col-12">
+
+        <div class="header">
+
+            <div class="header-top">
+
+                <button
+
+                    id="btnMenu"
+
+                    class="btn-menu">
+
+                    <i class="fa-solid fa-bars"></i>
+
+                </button>
+
+                <h2>
+
+                    <i class="fa-solid fa-plane-circle-xmark"></i>
+
+                    Dashboard de Cancelaciones por Aeropuerto
+
+                </h2>
+
+            </div>
+
+            <p>
+
+                Sistema de análisis de cancelaciones de vuelos por aeropuerto en Estados Unidos
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- FILTROS -->
+<!-- ===================================== -->
+
+<div class="row mb-4">
+
+    <div class="col-12">
+
+        <div class="filter-card">
+
+            <div class="row">
+
+                <!-- AÑOS -->
+
+                <div class="col-md-6">
+
+                    <label class="filter-title">
+
+                        Rango de años
+
+                    </label>
+
+                    <div id="sliderAnios"></div>
+
+                    <div class="slider-info">
+
+                        <span id="lblAnioInicio">
+
+                            2019
+
+                        </span>
+
+                        <span id="lblAnioFin">
+
+                            2023
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <!-- MESES -->
+
+                <div class="col-md-6">
+
+                    <label class="filter-title">
+
+                        Rango de meses
+
+                    </label>
+
+                    <div id="sliderMeses"></div>
+
+                    <div class="slider-info">
+
+                        <span id="lblMesInicio">
+
+                            Enero
+
+                        </span>
+
+                        <span id="lblMesFin">
+
+                            Diciembre
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row mt-4">
+
+                <!-- Aeropuerto -->
+
+                <div class="col-md-5">
+
+                    <label>
+
+                        Aeropuerto
+
+                    </label>
+
+                    <select
+
+                        id="cmbAeropuerto"
+
+                        class="form-select">
+
+                    </select>
+
+                </div>
+
+                <!-- Franja -->
+
+                <div class="col-md-5">
+
+                    <label>
+
+                        Franja Horaria
+
+                    </label>
+
+                    <select
+
+                        id="cmbFranja"
+
+                        class="form-select">
+
+                    </select>
+
+                </div>
+
+                <!-- Botón -->
+
+                <div class="col-md-2 d-flex align-items-end">
+
+                    <button
+
+                        id="btnLimpiar"
+
+                        class="btn btn-primary w-100">
+
+                        Limpiar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- KPIs + GRÁFICA DE PASTEL -->
+<!-- ===================================== -->
+
+<div class="row mb-4">
+
+    <!-- KPIs -->
+
+    <div class="col-lg-5">
+
+        <div class="row g-3">
+
+            <!-- KPI 1 -->
+
+            <div class="col-6">
+
+                <div class="card kpi-card h-100">
+
+                    <div class="card-body text-center">
+
+                        <i class="fa-solid fa-circle-xmark fa-2x mb-3"></i>
+
+                        <h6>
+
+                            Motivo Principal
+
+                        </h6>
+
+                        <h3 id="kpiMotivo">
+
+                            -
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- KPI 2 -->
+
+            <div class="col-6">
+
+                <div class="card kpi-card h-100">
+
+                    <div class="card-body text-center">
+
+                        <i class="fa-solid fa-plane fa-2x mb-3"></i>
+
+                        <h6>
+
+                            Aeropuerto con Más Cancelaciones
+
+                        </h6>
+
+                        <h3 id="kpiAeropuerto">
+
+                            -
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- KPI 3 -->
+
+            <div class="col-6">
+
+                <div class="card kpi-card h-100">
+
+                    <div class="card-body text-center">
+
+                        <i class="fa-solid fa-ban fa-2x mb-3"></i>
+
+                        <h6>
+
+                            Vuelos Cancelados
+
+                        </h6>
+
+                        <h3 id="kpiCancelados">
+
+                            -
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- KPI 4 -->
+
+            <div class="col-6">
+
+                <div class="card kpi-card h-100">
+
+                    <div class="card-body text-center">
+
+                        <i class="fa-solid fa-percent fa-2x mb-3"></i>
+
+                        <h6>
+
+                            % Cancelados
+
+                        </h6>
+
+                        <h3 id="kpiPorcentaje">
+
+                            -
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Pastel -->
+
+    <div class="col-lg-7">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Cancelaciones por Motivo
+
+            </h5>
+
+            <div class="chart-container">
+
+                <canvas id="graficaPastel"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- GRÁFICAS -->
+<!-- ===================================== -->
+
+<div class="row mb-4">
+
+    <!-- Barras Vertical -->
+
+    <div class="col-lg-6">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Cancelaciones por Aeropuerto
+
+            </h5>
+
+            <div class="chart-container">
+
+                <canvas id="graficaAeropuertos"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Barras Horizontal -->
+
+    <div class="col-lg-6">
+
+        <div class="chart-card">
+
+            <h5 class="mb-3">
+
+                Cancelaciones por Estado
+
+            </h5>
+
+            <div class="chart-container">
+
+                <canvas id="graficaEstados"></canvas>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ===================================== -->
+<!-- JAVASCRIPT -->
+<!-- ===================================== -->
+
+<!-- noUiSlider -->
+
+<script src="https://cdn.jsdelivr.net/npm/nouislider@15.8.1/dist/nouislider.min.js"></script>
+
+<!-- ChartJS -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Plugin DataLabels -->
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+<!-- Sidebar -->
+
+<script src="../js/sidebarLoader.js"></script>
+
+<script src="../js/sidebar.js"></script>
+
+<!-- Dashboard -->
+
+<script src="../js/cancelacionesAeroCharts.js"></script>
+
+<script src="../js/cancelacionesAero.js"></script>
+
+</body>
+
+</html>

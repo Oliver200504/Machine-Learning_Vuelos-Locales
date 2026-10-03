@@ -1,0 +1,290 @@
+.header{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+}
+
+.header h2{
+
+    color:#0D6EFD;
+
+    font-weight:bold;
+
+}
+
+.header p{
+
+    color:#666;
+
+    margin-top:10px;
+
+}
+
+.form-select{
+
+    height:48px;
+
+    border-radius:12px;
+
+}
+
+.btn{
+
+    height:48px;
+
+    border-radius:12px;
+
+}
+
+/*==============================
+
+FILTROS
+
+==============================*/
+
+.filter-card{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:15px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,.08);
+
+}
+
+.filter-title{
+
+    font-weight:bold;
+
+    color:#0D6EFD;
+
+    margin-bottom:10px;
+
+}
+
+/*==============================
+
+SCROLL HORIZONTAL
+
+==============================*/
+
+.scroll-container{
+
+    display:flex;
+
+    gap:10px;
+
+    overflow-x:auto;
+
+    padding-bottom:10px;
+
+    scrollbar-width:thin;
+
+}
+
+.scroll-container::-webkit-scrollbar{
+
+    height:8px;
+
+}
+
+.scroll-container::-webkit-scrollbar-thumb{
+
+    background:#0D6EFD;
+
+    border-radius:20px;
+
+}
+
+/*==============================
+
+BOTONES
+
+==============================*/
+
+.filter-btn{
+
+    min-width:90px;
+
+    border:none;
+
+    background:white;
+
+    border:2px solid #0D6EFD;
+
+    color:#0D6EFD;
+
+    border-radius:25px;
+
+    padding:10px 20px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    font-weight:bold;
+
+}
+
+.filter-btn:hover{
+
+    background:#0D6EFD;
+
+    color:white;
+
+}
+
+.filter-btn.active{
+
+    background:#0D6EFD;
+
+    color:white;
+
+}
+
+/*==================================================
+SLIDERS
+==================================================*/
+
+#sliderAnios,
+#sliderMeses{
+
+    margin-top:20px;
+    margin-bottom:10px;
+
+}
+
+.slider-info{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    margin-top:15px;
+
+    font-weight:bold;
+
+    color:#0D6EFD;
+
+    font-size:15px;
+
+}
+
+/* noUiSlider */
+
+.noUi-target{
+
+    border:none;
+
+    box-shadow:none;
+
+    background:#d9d9d9;
+
+    height:8px;
+
+}
+
+.noUi-connect{
+
+    background:#0D6EFD;
+
+}
+
+.noUi-handle{
+
+    width:22px !important;
+
+    height:22px !important;
+
+    border-radius:50%;
+
+    border:none;
+
+    background:#0D6EFD;
+
+    box-shadow:none;
+
+    cursor:pointer;
+
+    right:-11px !important;
+
+    top:-8px !important;
+
+}
+
+.noUi-handle::before,
+.noUi-handle::after{
+
+    display:none;
+
+}
+
+/*=========================================
+  CONTENEDORES DE GRÁFICAS
+=========================================*/
+
+.chart-card{
+
+    background:#fff;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    box-shadow:0 5px 15px rgba(0,0,0,.12);
+
+    margin-bottom:25px;
+
+}
+
+.chart-container{
+
+    position:relative;
+
+    width:100%;
+
+    height:350px;
+
+}
+
+.chart-container canvas{
+
+    width:100% !important;
+
+    height:100% !important;
+
+}
+
+#mapaEstados{
+
+    width:100%;
+
+    height:350px;
+
+    border-radius:12px;
+
+}
+
+.header-top{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:18px;
+
+}
+
+.header-top h2{
+
+    margin:0;
+
+}
